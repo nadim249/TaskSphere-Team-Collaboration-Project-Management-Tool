@@ -1,0 +1,86 @@
+﻿@model TaskSphere.Entities.Project
+
+<div class="p-0">
+  
+    <div class="px-4 pt-4 pb-3">
+        <h3 class="fw-bold text-dark mb-1">@Model.Title</h3>
+        <p class="text-muted mb-3" style="font-size: 0.95rem;">@Model.Description</p>
+
+        <div class="d-flex gap-3 align-items-center mb-3">
+            <span class="badge rounded-pill px-3 py-2" style="background-color: #fef9c3; color: #854d0e; font-weight: 600; font-size: 0.75rem;">
+                @Model.Priority Priority
+            </span>
+            <span class="text-muted small">
+                <i class="bi bi-calendar3 me-1"></i> Due: @(Model.Deadline?.ToString("M/d/yyyy") ?? "TBD")
+            </span>
+        </div>
+    </div>
+
+    <hr class="mx-4 my-0" style="opacity: 0.1;">
+
+    <div class="p-4">
+       
+        <h6 class="fw-bold mb-3 text-dark" style="font-size: 0.9rem;">Project Statistics</h6>
+        <div class="row g-3 mb-4 text-center">
+            <div class="col-4">
+                <div class="p-3 border rounded-3 h-100" style="background-color: #f0fdf4; border-color: #bbf7d0 !important;">
+                    <h2 class="fw-bold text-success m-0">1</h2>
+                    <div class="small text-success fw-semibold">Completed</div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="p-3 border rounded-3 h-100" style="background-color: #eff6ff; border-color: #bfdbfe !important;">
+                    <h2 class="fw-bold text-primary m-0">3</h2>
+                    <div class="small text-primary fw-semibold">In Progress</div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="p-3 border rounded-3 h-100" style="background-color: #f8fafc; border-color: #e2e8f0 !important;">
+                    <h2 class="fw-bold text-dark m-0">2</h2>
+                    <div class="small text-muted fw-semibold">Pending</div>
+                </div>
+            </div>
+        </div>
+
+        
+        <div class="mb-4">
+            <h6 class="fw-bold mb-3 text-dark" style="font-size: 0.9rem;">
+                <i class="bi bi-people me-2" style="color: #6366f1;"></i>Team Members (5)
+            </h6>
+            <div class="p-3 rounded-3" style="background-color: #f8fafc; border: 1px solid #f1f5f9;">
+                <span class="text-muted small">5 team members assigned to this project</span>
+            </div>
+        </div>
+
+        
+        <div class="mb-2">
+            <h6 class="fw-bold mb-3 text-dark" style="font-size: 0.9rem;">
+                <i class="bi bi-bullseye me-2" style="color: #6366f1;"></i>Tasks (6)
+            </h6>
+            <div class="border rounded-3 overflow-hidden shadow-sm">
+                
+                <div class="d-flex justify-content-between align-items-center p-3 bg-white border-bottom">
+                    <div>
+                        <div class="fw-bold text-dark" style="font-size: 0.85rem;">Design Homepage Mockup</div>
+                        <div class="text-muted" style="font-size: 0.75rem;">Due: 2026-05-10</div>
+                    </div>
+                    <div class="d-flex gap-1">
+                        <span class="badge bg-success-subtle text-success border border-success-subtle fw-normal" style="font-size: 0.7rem;">completed</span>
+                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle fw-normal" style="font-size: 0.7rem;">high</span>
+                    </div>
+                </div>
+              
+                <div class="d-flex justify-content-between align-items-center p-3 bg-white">
+                    <div>
+                        <div class="fw-bold text-dark" style="font-size: 0.85rem;">Implement Authentication</div>
+                        <div class="text-muted" style="font-size: 0.75rem;">Due: 2026-05-15</div>
+                    </div>
+                    <div class="d-flex gap-1">
+                        <span class="badge bg-primary-subtle text-primary border border-primary-subtle fw-normal" style="font-size: 0.7rem;">in-progress</span>
+                        <span class="badge bg-danger-subtle text-danger border border-danger-subtle fw-normal" style="font-size: 0.7rem;">high</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

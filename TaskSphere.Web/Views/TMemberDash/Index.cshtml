@@ -1,0 +1,130 @@
+﻿@model TaskSphere.Models.DashboardVM
+
+@{
+    ViewData["Title"] = "My Workspace";
+}
+
+<div class="container-fluid py-4">
+    <div class="mb-4">
+        <h2 class="fw-bold text-dark mb-1">My Dashboard</h2>
+        <p class="text-muted">Personal workspace overview, your assigned tasks, and project tracking</p>
+    </div>
+
+    <div class="row gx-4 mb-4">
+
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-0 shadow-sm p-4 h-100" style="background-color: #f0f5ff; border-radius: 16px;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="bg-primary text-white p-3 rounded-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                        <i class="bi bi-folder-fill fs-5"></i>
+                    </div>
+                    <span class="text-success small fw-bold"><i class="bi bi-arrow-up-right me-1"></i>Active</span>
+                </div>
+                <h2 class="fw-bold mb-1">@Model.TotalProjects</h2>
+                <span class="text-muted small fw-medium">My Projects</span>
+            </div>
+        </div>
+
+      
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-0 shadow-sm p-4 h-100" style="background-color: #fbf2ff; border-radius: 16px;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="text-white p-3 rounded-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px; background-color: #a855f7;">
+                        <i class="bi bi-people-fill fs-5"></i>
+                    </div>
+                    <span class="text-purple small fw-bold" style="color: #a855f7;">Connected</span>
+                </div>
+                <h2 class="fw-bold mb-1">@Model.TotalTeamMembers</h2>
+                <span class="text-muted small fw-medium">Team Members</span>
+            </div>
+        </div>
+
+       
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-0 shadow-sm p-4 h-100" style="background-color: #f0fdf4; border-radius: 16px;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="bg-success text-white p-3 rounded-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                        <i class="bi bi-check-circle-fill fs-5"></i>
+                    </div>
+                    <span class="text-success small fw-bold">@Model.TaskCompletionRateString Rate</span>
+                </div>
+                <h2 class="fw-bold mb-1">@Model.CompletedTasksCount</h2>
+                <span class="text-muted small fw-medium">My Completed Tasks</span>
+            </div>
+        </div>
+
+      
+        <div class="col-xl-3 col-md-6 mb-4">
+            <div class="card border-0 shadow-sm p-4 h-100" style="background-color: #fef2f2; border-radius: 16px;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div class="bg-danger text-white p-3 rounded-3 d-flex align-items-center justify-content-center" style="width: 48px; height: 48px;">
+                        <i class="bi bi-exclamation-circle-fill fs-5"></i>
+                    </div>
+                    <span class="text-danger small fw-bold bg-white px-2 py-1 rounded border border-danger-subtle">
+                        @Model.UrgentLabelString
+                    </span>
+                </div>
+                <h2 class="fw-bold mb-1">@Model.PendingTasksCount</h2>
+                <span class="text-muted small fw-medium">My Pending Tasks</span>
+            </div>
+        </div>
+    </div>
+
+    <div class="row gx-4">
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm p-4 h-100" style="border-radius: 16px; min-height: 450px;">
+                <h5 class="fw-bold text-dark mb-4">Upcoming Tasks</h5>
+                <div class="d-flex flex-column gap-3">
+                    @if (!Model.UpcomingTasks.Any())
+                    {
+                        <div class="text-center py-5 text-muted small"><i class="bi bi-clipboard2-check fs-2 mb-2 d-block"></i> No upcoming tasks assigned.</div>
+                    }
+                    else
+                    {
+                        @foreach (var task in Model.UpcomingTasks)
+                        {
+                            <div class="p-3 rounded-3 d-flex justify-content-between align-items-center" style="background-color: #f8fafc; border-left: 4px solid #22c55e;">
+                                <div>
+                                    <h6 class="fw-bold text-dark mb-0">@task.TaskTitle</h6>
+                                    <small class="text-muted d-block mb-2">@task.ProjectTitle</small>
+                                    <span class="badge bg-light text-dark border px-2 py-1" style="font-size: 0.7rem;">@task.Status.ToUpper()</span>
+                                </div>
+                                <small class="text-warning fw-bold">@task.DaysLeft days left</small>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+
+      
+        <div class="col-lg-6 mb-4">
+            <div class="card border-0 shadow-sm p-4 h-100" style="border-radius: 16px; min-height: 450px;">
+                <h5 class="fw-bold text-dark mb-4">My Projects</h5>
+                <div class="d-flex flex-column gap-4">
+                    @if (!Model.MyProjects.Any())
+                    {
+                        <div class="text-center py-5 text-muted small"><i class="bi bi-folder-x fs-2 mb-2 d-block"></i> No active projects linked.</div>
+                    }
+                    else
+                    {
+                        @foreach (var proj in Model.MyProjects)
+                        {
+                            <div>
+                                <div class="d-flex justify-content-between mb-1">
+                                    <h6 class="fw-bold text-dark mb-0">@proj.Title</h6>
+                                    <span class="badge bg-secondary-subtle text-secondary px-2 py-1" style="font-size: 0.7rem;">@proj.Priority.ToUpper()</span>
+                                </div>
+
+                                <div class="d-flex justify-content-between">
+
+                                    <small class="text-muted">Due: @proj.TargetDeadline.ToString("MMM dd")</small>
+                                </div>
+                            </div>
+                        }
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

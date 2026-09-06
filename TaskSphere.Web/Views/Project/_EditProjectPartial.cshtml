@@ -1,0 +1,110 @@
+﻿@model TaskSphere.Models.ProjectEditVM
+
+<form asp-action="UpdateProject" asp-controller="Project" method="post">
+    @Html.AntiForgeryToken()
+    <input type="hidden" asp-for="Project.ProjectId" />
+    <input type="hidden" asp-for="Project.CreatedBy" />
+    <input type="hidden" asp-for="Project.CreatedAt" />
+    <input type="hidden" asp-for="Project.Status" />
+
+    <div class="modal-body px-4">
+        <div class="mb-3">
+            <label asp-for="Project.Title" class="form-label fw-semibold small">Project Name *</label>
+            <input asp-for="Project.Title" class="form-control" required style="border-radius: 10px;" placeholder="Enter project name..." />
+        </div>
+
+        <div class="mb-3">
+            <label asp-for="Project.Description" class="form-label fw-semibold small">Description *</label>
+            <textarea asp-for="Project.Description" class="form-control" rows="4" required style="border-radius: 10px;" placeholder="Describe the project goals"></textarea>
+        </div>
+
+        <div class="row mb-4 g-3">
+            <div class="col-md-6">
+                <label asp-for="Project.Deadline" class="form-label fw-semibold small">Deadline *</label>
+                <div class="input-group">
+                    <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+                    <input asp-for="Project.Deadline" type="date" class="form-control" style="border-radius: 0 10px 10px 0;" />
+                </div>
+            </div>
+            <div class="col-md-6">
+                <label asp-for="Project.Priority" class="form-label fw-semibold small">Priority *</label>
+                <select asp-for="Project.Priority" class="form-select" style="border-radius: 10px;">
+                    <option value="Low">Low</option>
+                    <option value="Medium">Medium</option>
+                    <option value="High">High</option>
+                    <option value="Critical">Critical</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="mb-2">
+            <label class="form-label fw-semibold small"><i class="bi bi-people me-2"></i>Assign Team Members</label>
+            <div class="border p-3" style="border-radius: 15px; max-height: 250px; overflow-y: auto; background-color: #f8fafc; border: 1px solid #e2e8f0 !important;">
+                @if (Model.AvailableUsers != null && Model.AvailableUsers.Any())
+                {
+                    @foreach (var user in Model.AvailableUsers)
+                    {
+                        var isChecked = Model.SelectedUserIds != null && Model.SelectedUserIds.Contains(user.UserId) ? "checked" : "";
+
+                        <div class="d-flex align-items-center justify-content-between p-3 mb-2 bg-white shadow-sm project-member-card" style="border-radius: 10px; border: 1px solid #e2e8f0;">
+                            <div class="d-flex align-items-center gap-3">
+                                <input class="form-check-input mt-0" type="checkbox" name="SelectedUserIds" value="@user.UserId" id="user_@user.UserId" @isChecked style="cursor: pointer; width: 18px; height: 18px;">
+                                <label class="form-check-label mb-0" for="user_@user.UserId" style="cursor: pointer; line-height: 1.3;">
+                                    <span class="d-block fw-bold text-dark small mb-0">@user.FullName</span>
+                                    <span class="text-muted" style="font-size: 0.75rem;">@user.Email</span>
+                                </label>
+                            </div>
+
+                            <span class="badge bg-dark rounded-pill px-3 py-1.5" style="font-size: 0.65rem; font-weight: 600; background-color: #212529 !important;">
+                                @(user.RoleName ?? "Member")
+                            </span>
+                        </div>
+                    }
+                }
+                else
+                {
+                    <div class="text-center text-muted py-3 small">No team members found in organization.</div>
+                }
+            </div>
+            <div class="text-muted mt-2 ps-1" id="modalMemberCountText" style="font-size: 0.8rem;">0 member(s) selected</div>
+        </div>
+    </div>
+
+    <div class="modal-footer border-0 px-4 pb-4 justify-content-end gap-2">
+        <button type="button" class="btn btn-light px-4 fw-bold" data-bs-dismiss="modal" style="border-radius: 10px; border: 1px solid #cbd5e1;">Cancel</button>
+        <button type="submit" class="btn btn-primary px-5 fw-bold shadow-sm" style="background: #4f36ff; border: none; border-radius: 10px;">Update Project</button>
+    </div>
+</form>
+
+<script>
+    function calculateSelectedMembers() {
+        const checkedCount = document.querySelectorAll('.project-member-card .form-check-input:checked').length;
+        document.getElementById('modalMemberCountText').innerText = `${checkedCount} member(s) selected`;
+    }
+
+    document.querySelectorAll('.project-member-card .form-check-input').forEach(box => {
+        box.addEventListener('change', calculateSelectedMembers);
+    });
+
+    calculateSelectedMembers();
+</script>
+
+<style>
+    .project-member-card {
+        transition: all 0.2s ease-in-out;
+    }
+
+        .project-member-card:hover {
+            border-color: #cbd5e1 !important;
+            background-color: #fafafa !important;
+        }
+
+    .form-check-input:checked {
+        background-color: #4f36ff !important;
+        border-color: #4f36ff !important;
+    }
+
+    .form-check-input:focus {
+        box-shadow: none;
+    }
+</style>
