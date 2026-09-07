@@ -1,0 +1,130 @@
+﻿@inject TaskSphere.Repos.NotificationRepo NotifRepo
+@{
+    var myNotifications = NotifRepo.GetMyNotifications();
+    var notificationCount = myNotifications?.Count ?? 0;
+}
+
+<li class="nav-item me-3" style="cursor: pointer;">
+    <a class="nav-link text-dark position-relative" href="#" id="notificationBell" data-bs-toggle="modal" data-bs-target="#notificationModal">
+        <i class="bi bi-bell text-muted fs-5"></i>
+
+        @if (notificationCount > 0)
+        {
+            <span id="notifBadge" class="position-absolute top-1 start-75 translate-middle badge rounded-pill bg-danger" style="font-size: 0.65rem;">
+                @notificationCount
+            </span>
+        }
+    </a>
+</li>
+
+<div class="modal fade" id="notificationModal" tabindex="-1" role="dialog" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-scrollable" role="document">
+        <div class="modal-content border-0 shadow-lg rounded-4">
+            <div class="modal-header border-bottom-0 p-4">
+                <h5 class="modal-title fw-bold text-dark">
+                    <i class="bi bi-bell-fill text-primary me-2"></i> Notifications
+                </h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+
+            <div class="modal-body p-0" style="max-height: 400px;">
+                @if (notificationCount == 0)
+                {
+                    <div class="text-center py-5 text-muted">
+                        <i class="bi bi-bell-slash fs-1 d-block mb-2 opacity-50"></i>
+                        <small>All caught up! No new updates.</small>
+                    </div>
+                }
+                else
+                {
+                    <div class="list-group list-group-flush">
+                        @foreach (var notif in myNotifications)
+                        {
+                            var iconClass = notif.Type switch
+                            {
+                                "Task" => "bi-file-earmark-check text-success bg-success-subtle",
+                                "Comment" => "bi-chat-left-text text-primary bg-primary-subtle",
+                                "Attachment" => "bi-paperclip text-warning bg-warning-subtle",
+                                _ => "bi-info-circle text-secondary bg-light"
+                            };
+
+                            var targetUrl = "#";
+                            if (notif.RelatedTaskId.HasValue)
+                            {
+                                if (User.IsInRole("Admin") || User.IsInRole("Manager"))
+                                {
+                                    targetUrl = $"/Task/Details/{notif.RelatedTaskId}";
+                                }
+                                else
+                                {
+                                    targetUrl = $"/TMemberTask/Details/{notif.RelatedTaskId}";
+                                }
+                            }
+                            <a href="@targetUrl" class="list-group-item list-group-item-action d-flex gap-3 p-3 border-bottom border-light">
+                                <div class="rounded-circle d-flex align-items-center justify-content-center border" style="width: 40px; height: 40px; min-width: 40px;">
+                                    <i class="bi @iconClass fs-5 rounded-circle p-2"></i>
+                                </div>
+                                <div class="flex-grow-1">
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <h6 class="fw-bold mb-1 text-dark small">@notif.Title</h6>
+                                        <small class="text-muted extra-small">@notif.CreatedAt?.ToString("MM/dd HH:mm")</small>
+                                    </div>
+                                    <p class="mb-0 text-secondary small text-truncate-2">@notif.Message</p>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .extra-small {
+        font-size: 0.7rem;
+    }
+
+    .text-truncate-2 {
+        display: -webkit-box;
+        -webkit-line-clamp: 2;
+        -webkit-box-orient: vertical;
+        overflow: hidden;
+    }
+
+    .bg-success-subtle {
+        background-color: #d1e7dd !important;
+    }
+
+    .bg-primary-subtle {
+        background-color: #cff4fc !important;
+    }
+
+    .bg-warning-subtle {
+        background-color: #fff3cd !important;
+    }
+</style>
+
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        const bellButton = document.getElementById("notificationBell");
+        const badge = document.getElementById("notifBadge");
+
+        if (bellButton && badge) {
+            bellButton.addEventListener("click", function () {
+                badge.style.display = "none";
+
+                fetch('/TMemberTask/MarkNotificationsAsRead', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(response => {
+                    if (!response.ok) {
+                        console.error("Failed to update notification state in database.");
+                    }
+                });
+            });
+        }
+    });
+</script>

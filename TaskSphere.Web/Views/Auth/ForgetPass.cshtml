@@ -1,0 +1,133 @@
+﻿@model TaskSphere.Models.ForgotPasswordModel
+
+@Html.Partial("_Message")
+
+<style>
+    /* Custom tweaks to match the image precisely */
+    html, body {
+        height: 100%;
+        margin: 0;
+        padding: 0;
+    }
+
+    body {
+        background-color: #eef2f7; /* Soft blue-gray background */
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+
+    .login-card {
+        border: none;
+        border-radius: 16px;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        max-width: 380px;
+        margin: 0 auto;
+        width: 100%;
+        padding: 2rem !important;
+    }
+
+    .brand-icon-wrapper {
+        width: 50px;
+        height: 50px;
+        background-color: #584af7;
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 50%;
+        margin: 0 auto 12px auto;
+        font-size: 1.5rem;
+    }
+
+    .btn-custom-purple {
+        background-color: #584af7;
+        border-color: #584af7;
+        color: white;
+        border-radius: 8px;
+        padding: 8px;
+        font-weight: 600;
+        font-size: 0.9rem;
+    }
+
+        .btn-custom-purple:hover {
+            background-color: #4335d7;
+            border-color: #4335d7;
+            color: white;
+        }
+
+    .form-control {
+        border-radius: 8px;
+        padding: 8px 12px;
+        border: 1px solid #dee2e6;
+        font-size: 0.9rem;
+    }
+
+        .form-control:focus {
+            border-color: #584af7 !important;
+            box-shadow: 0 0 0 0.25rem rgba(88, 74, 247, 0.25);
+        }
+
+    .demo-note-box {
+        background-color: #f8f9fa;
+        border-radius: 8px;
+        padding: 12px;
+        font-size: 0.775rem;
+        line-height: 1.4;
+    }
+
+    .text-purple {
+        color: #584af7 !important;
+    }
+
+        .text-purple:hover {
+            color: #4335d7 !important;
+            text-decoration: underline;
+        }
+
+    h2 {
+        font-size: 1.3rem;
+    }
+
+    .form-label {
+        font-size: 0.8rem !important;
+    }
+</style>
+
+<div class="container d-flex justify-content-center align-items-center mt-5">
+    <div class="card login-card p-3 p-sm-5 bg-white">
+
+        <div class="brand-icon-wrapper">
+            <i class="bi bi-key-fill" style="transform: rotate(-45deg); display: inline-block;"></i>
+        </div>
+
+        <div class="text-center mb-3">
+            <h2 class="fw-bold text-dark m-0">Forgot Password?</h2>
+            <p class="text-muted small mt-2 px-1">
+                No worries! Enter your email and we'll send you reset instructions.
+            </p>
+        </div>
+
+        <form method="post" action="#">
+            <div asp-validation-summary="ModelOnly" class="text-danger small mb-3"></div>
+
+            <div class="mb-4">
+                <label asp-for="Email" class="form-label fw-semibold text-secondary small">Email Address</label>
+                <input asp-for="Email" type="email" class="form-control" placeholder="you@example.com" required autofocus />
+                <span asp-validation-for="Email" class="text-danger small"></span>
+            </div>
+
+            <button type="submit" class="btn btn-custom-purple w-100 mb-4">Send Reset Link</button>
+        </form>
+
+        <div class="text-center mb-4">
+            <a asp-action="SignIn" asp-controller="Auth" class="text-dark fw-semibold text-decoration-none small d-inline-flex align-items-center gap-2">
+                <i class="bi bi-arrow-left"></i> Back to Sign In
+            </a>
+        </div>
+
+    </div>
+</div>
+
+@section Scripts
+{
+    @Html.Partial("_ValidationScriptsPartial")
+}

@@ -1,0 +1,210 @@
+﻿@using System.Security.Claims
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - TaskSphere.Web</title>
+    @* <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" /> *@
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap-cosmo.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/TaskSphere.Web.styles.css" asp-append-version="true" />
+    <style>
+            body {
+                background-color: #f8f9fc;
+            }
+
+            .sidebar-link:hover {
+                background-color: #f8f9fc;
+                color: #6366f1 !important;
+            }
+
+            /* Active Link */
+            .active-link {
+                color: #6366f1 !important;
+                background-color: #f0f0ff !important;
+            }
+
+            /* Inactive Link */
+            .inactive-link {
+                color: #6c757d;
+            }
+
+                .inactive-link:hover {
+                    background-color: #f8f9fc;
+                    color: #6366f1 !important;
+                }
+    </style>
+</head>
+<body>
+
+    <div class="d-flex" style="min-height: 100vh;">
+    
+
+
+        <!-- Sidebar -->
+        @if (User.Identity != null && User.Identity.IsAuthenticated)
+        {
+
+
+            <nav class="d-flex flex-column bg-white border-end shadow-sm" style="width: 260px; z-index: 1000;">
+
+
+                <!-- Brand -->
+                <div class="p-4 d-flex align-items-center gap-2 fw-bold fs-5">
+                    <div class="text-white rounded px-2 py-1" style="background-color: #6366f1;">
+                        <i class="bi bi-briefcase-fill"></i>
+                    </div>
+                    TaskSphere
+                </div>
+
+                <!-- Role Badge -->
+                <div class="px-4 mb-3">
+                    <div class="text-center fw-bold rounded-pill py-1" style="color: #6366f1; background-color: #f0f0ff; font-size: 0.8rem;">
+                        @User.FindFirst(ClaimTypes.Role)?.Value
+                    </div>
+                </div>
+
+                <!-- Navigation Links
+                <div class="nav flex-column px-3 gap-1 fw-semibold">
+
+                @{
+                    var currentController = ViewContext.RouteData.Values["controller"]?.ToString() ?? "";
+                    var currentAction = ViewContext.RouteData.Values["action"]?.ToString() ?? "";
+                }
+
+                <!-- Navigation Links -->
+                <div class="nav flex-column px-3 gap-1 fw-semibold">
+                    <!-- Dashboard -->
+                    @if (@User.FindFirst(ClaimTypes.Role)?.Value == "Admin" || @User.FindFirst(ClaimTypes.Role)?.Value == "Manager") {
+                        <a class="nav-link rounded d-flex align-items-center gap-3 py-2 px-3
+                    @(currentController == "Home" && currentAction == "Index" ? "active-link" : "inactive-link")"
+                           asp-controller="Home" asp-action="Index">
+                            <i class="bi bi-grid fs-5"></i> Dashboard
+                        </a>
+                    }
+                    else
+                    {
+                       
+                            <a class="nav-link rounded d-flex align-items-center gap-3 py-2 px-3
+                    @(currentController == "TMemberDash" && currentAction == "Index" ? "active-link" : "inactive-link")"
+                               asp-controller="TMemberDash" asp-action="Index">
+                                <i class="bi bi-grid fs-5"></i> Dashboard
+                            </a>
+
+                    }
+
+                    <!-- All Projects -->
+                    @if (@User.FindFirst(ClaimTypes.Role)?.Value == "Admin" || @User.FindFirst(ClaimTypes.Role)?.Value == "Manager")
+                    {
+                        <a class="nav-link rounded d-flex align-items-center gap-3 py-2 px-3
+                    @(currentController == "Project" ? "active-link" : "inactive-link")"
+                           asp-controller="Project" asp-action="Index">
+                            <i class="bi bi-journal-album fs-5"></i> All Projects
+                        </a>
+                    }
+                    else
+                    {
+                        <a class="nav-link rounded d-flex align-items-center gap-3 py-2 px-3
+                            @(currentController == "TMemberProject" ? "active-link" : "inactive-link")"
+                           asp-controller="TMemberProject" asp-action="Index">
+                        <i class="bi bi-journal-album fs-5"></i> All Projects
+                        </a>
+
+                    }
+                    <!-- All Tasks -->
+                    @if (@User.FindFirst(ClaimTypes.Role)?.Value == "Admin" || @User.FindFirst(ClaimTypes.Role)?.Value == "Manager")
+                    {
+                        <a class="nav-link rounded d-flex align-items-center gap-3 py-2 px-3
+                    @(currentController == "Task" ? "active-link" : "inactive-link")"
+                           asp-controller="Task" asp-action="Index">
+                            <i class="bi bi-check2-square fs-5"></i> All Tasks
+                        </a>
+                    }
+                    
+                        <a class="nav-link rounded d-flex align-items-center gap-3 py-2 px-3
+                    @(currentController == "TMemberTask" ? "active-link" : "inactive-link")"
+                           asp-controller="TMemberTask" asp-action="Index">
+                            <i class="bi bi-check2-square fs-5"></i> My Tasks
+                        </a>
+                    
+
+                    <!-- Team Management -->
+                    <a class="nav-link rounded d-flex align-items-center gap-3 py-2 px-3
+                        @(currentController == "TMemberTeam" ? "active-link" : "inactive-link")" asp-controller="TMemberTeam" asp-action="Index">
+                        <i class="bi bi-people fs-5"></i> Team
+                    </a>
+
+                    <!-- User Management -->
+                    @if (@User.FindFirst(ClaimTypes.Role)?.Value == "Admin" )
+                    {
+                        <a class="nav-link rounded d-flex align-items-center gap-3 py-2 px-3
+                    @(currentController == "User" ? "active-link" : "inactive-link")"
+                           asp-controller="User" asp-action="Index">
+                            <i class="bi bi-person-gear fs-5"></i> User Management
+                        </a>
+                    }
+
+                </div>
+
+                <!-- Sidebar Info Box (Pushed to bottom using mt-auto) -->
+                <div class="mt-auto p-3">
+                    <div class="p-3 rounded border" style="background-color: #f8f9fc; font-size: 0.85rem;">
+                        <strong class="text-dark d-block mb-1">System Overview</strong>
+                        <span class="text-muted">Manage all projects, tasks, and team members from one place.</span>
+                    </div>
+                </div>
+            </nav>
+        }
+
+        <!-- Right Side: Topbar + Main Content Area -->
+        <div class="d-flex flex-column flex-grow-1" style="width: calc(100% - 260px); overflow-x: hidden;">
+            @if (User.Identity != null && User.Identity.IsAuthenticated)
+            {
+                <!-- Top Navbar -->
+                <header class="bg-white border-bottom py-3 px-4 d-flex justify-content-end align-items-center">
+                    <div class="d-flex align-items-center gap-3">
+                        <!-- Notifications -->
+                        <partial name="_NotificationPanel" />
+                        <!-- User Info -->
+                        <div class="text-end lh-sm ms-2">
+                            <div class="fw-bold text-dark" style="font-size: 0.9rem;">@User.Identity.Name</div>
+                            <small class="text-muted">@User.FindFirst(ClaimTypes.Role)?.Value </small>
+                        </div>
+
+                        <!-- User Avatar -->
+                        <a class="rounded-circle d-flex align-items-center justify-content-center" style="width: 40px; height: 40px; background-color: #f0f0ff; color: #6366f1;" asp-controller="Profile" asp-action="Index">
+                            <i class="bi bi-person fs-5"></i>
+                        </a>
+
+                        <!-- Logout -->
+                        <a asp-controller="Auth" asp-action="SignOut" class="text-muted ms-2 fs-5 text-decoration-none">
+                            <i class="bi bi-box-arrow-right"></i>
+                        </a>
+                    </div>
+                </header>
+            }
+
+            <div class="container">
+                <main role="main" class="pb-3">
+                    @RenderBody()
+                </main>
+            </div>
+        </div>
+
+    </div>
+@if (User.Identity != null && User.Identity.IsAuthenticated)
+{
+    <footer class="border-top footer text-muted bg-body-secondary">
+        <div class="container ">
+            &copy; 2026 - TaskSphere.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
+        </div>
+    </footer>
+}
+<script src="~/lib/jquery/dist/jquery.min.js"></script>
+<script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+<script src="~/js/site.js" asp-append-version="true"></script>
+@await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

@@ -1,0 +1,40 @@
+﻿@model TaskSphere.Models.VerifyCodeModel
+
+<style>
+    html, body { height: 100%; margin: 0; padding: 0; }
+    body { background-color: #eef2f7; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; }
+    .login-card { border: none; border-radius: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05); max-width: 380px; margin: 0 auto; width: 100%; padding: 2rem !important; }
+    .brand-icon-wrapper { width: 50px; height: 50px; background-color: #584af7; color: white; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin: 0 auto 12px auto; font-size: 1.5rem; }
+    .btn-custom-purple { background-color: #584af7; border-color: #584af7; color: white; border-radius: 8px; padding: 8px; font-weight: 600; font-size: 0.9rem; }
+    .btn-custom-purple:hover { background-color: #4335d7; border-color: #4335d7; color: white; }
+    .form-control { border-radius: 8px; padding: 8px 12px; border: 1px solid #dee2e6; font-size: 0.9rem; }
+    .form-control:focus { border-color: #584af7 !important; box-shadow: 0 0 0 0.25rem rgba(88, 74, 247, 0.25); }
+</style>
+
+<div class="container d-flex flex-column justify-content-center align-items-center mt-5">
+    <div style="max-width: 380px; width: 100%;">
+        @Html.Partial("_Message")
+    </div>
+
+    <div class="card login-card p-3 p-sm-5 bg-white">
+        <div class="brand-icon-wrapper">
+            <i class="bi bi-shield-lock-fill"></i>
+        </div>
+        <div class="text-center mb-3">
+            <h2 class="fw-bold text-dark m-0 fs-5">Enter Verification Code</h2>
+            <p class="text-muted small mt-2">Type the 6-digit code sent to your registered Gmail address.</p>
+        </div>
+
+        <form method="post" asp-action="VerifyCode" asp-controller="Auth">
+            <input type="hidden" asp-for="Email" />
+            
+            <div class="mb-4">
+                <label asp-for="Code" class="form-label fw-semibold text-secondary small d-block text-start mb-2">6-Digit Code</label>
+                <input asp-for="Code" type="text" class="form-control text-center fw-bold fs-4 letter-spacing" placeholder="000000" maxlength="6" required autocomplete="off" autofocus />
+                <span asp-validation-for="Code" class="text-danger small"></span>
+            </div>
+
+            <button type="submit" class="btn btn-custom-purple w-100">Verify Code</button>
+        </form>
+    </div>
+</div>
