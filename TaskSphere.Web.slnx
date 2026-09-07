@@ -1,0 +1,9 @@
+<Solution>
+  <Project Path="TaskSphere.Api/TaskSphere.Api.csproj" Id="1ac5015f-ebe1-4ced-a338-e96df653f34f" />
+  <Project Path="TaskSphere.Data/TaskSphere.Data.csproj" Id="414f0ac0-2fe4-423f-ac39-0ca8a3f6677e" />
+  <Project Path="TaskSphere.Entities/TaskSphere.Entities.csproj" Id="cb1efa6c-e1a6-440b-9b64-ee6a4f1ea4b7" />
+  <Project Path="TaskSphere.Models/TaskSphere.Models.csproj" Id="1d0374d2-9ae6-4fd0-8515-b80ede16576c" />
+  <Project Path="TaskSphere.Repos/TaskSphere.Repos.csproj" Id="d6e6851e-06ce-40b2-b460-105c73868748" />
+  <Project Path="TaskSphere.Shared/TaskSphere.Shared.csproj" Id="6a2641ec-16ea-41e8-8fdb-c8d479e78453" />
+  <Project Path="TaskSphere.Web/TaskSphere.Web.csproj" />
+</Solution>
