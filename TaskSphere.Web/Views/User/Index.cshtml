@@ -1,0 +1,261 @@
+﻿@model IEnumerable<TaskSphere.Entities.User>
+@{
+    Layout = "_Layout";
+    ViewData["Title"] = "User Management";
+}
+
+<style>
+    .stat-card { border-radius: 16px; border: none; padding: 24px; color: white; min-height: 120px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+    .table-container { background: white; border-radius: 15px; border: 1px solid #eef2f6; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.02); }
+    .table thead { background-color: #f9fafb; }
+    .table thead th { font-size: 11px; text-transform: uppercase; color: #6b7280; padding: 15px; border: none; }
+    .table tbody td { vertical-align: middle; padding: 15px; border-bottom: 1px solid #f3f4f6; }
+    
+    .avatar { width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-weight: bold; }
+    .role-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; background: #f3f0ff; color: #7c3aed; }
+    .status-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; background: #ecfdf5; color: #10b981; border: 1px solid #d1fae5; }
+    .status-badge.inactive { background: #fef2f2; color: #ef4444; border: 1px solid #fee2e2; }
+
+    .modal-content { border-radius: 24px !important; border: none; overflow: hidden; }
+    .role-box { border: 1.5px solid #eef2f6; border-radius: 12px; padding: 16px; margin-bottom: 12px; cursor: pointer; transition: 0.2s; position: relative; }
+    .role-box:hover { border-color: #6366f1; background-color: #fbfbff; }
+    .role-box.active { border-color: #6366f1; background-color: #f0f0ff; }
+    .role-box input[type="radio"] { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); width: 18px; height: 18px; cursor: pointer; }
+    .role-content { margin-left: 35px; }
+
+    .details-header { background: #7c3aed; color: white; padding: 20px; }
+    .detail-card { border-radius: 12px; padding: 15px; border: 1px solid #f1f5f9; text-align: center; }
+    .icon-box { width: 60px; height: 60px; border-radius: 50%; background: #f3f0ff; color: #7c3aed; font-size: 24px; display: flex; align-items: center; justify-content: center; }
+    .project-item { border: 1px solid #f1f5f9; border-radius: 12px; padding: 15px; margin-bottom: 10px; }
+    .invalid-feedback { font-size: 11px; color: #ef4444; margin-top: 4px; }
+</style>
+
+<div class="py-4">
+    @if (TempData["ErrorMessage"] != null) {
+        <div class="alert alert-danger alert-dismissible fade show border-0 shadow-sm mb-4" style="border-radius: 12px;">
+            <i class="bi bi-exclamation-triangle-fill me-2"></i> <b>Exist Error:</b> @TempData["ErrorMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+    @if (TempData["SuccessMessage"] != null) {
+        <div class="alert alert-success alert-dismissible fade show border-0 shadow-sm mb-4" style="border-radius: 12px;">
+            <i class="bi bi-check-circle-fill me-2"></i> @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+        </div>
+    }
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <div>
+            <h2 class="fw-bold mb-0">User & Access Management</h2>
+            <p class="text-muted">Manage system accounts and monitor performance</p>
+        </div>
+        <button class="btn btn-primary px-4 py-2 fw-bold" style="background-color: #6366f1; border:none; border-radius: 10px;" onclick="openAdd()">
+            <i class="bi bi-plus-lg me-2"></i>Add New User
+        </button>
+    </div>
+
+    <div class="row g-4 mb-4">
+        <div class="col-md-3">
+            <div class="card border-0 p-4 shadow-sm" style="border-radius: 16px;"><small class="text-muted fw-bold">TOTAL USERS</small><h1 class="fw-bold mb-0">@Model.Count()</h1></div>
+        </div>
+        <div class="col-md-3"><div class="stat-card" style="background-color: #9061ff;"><h6>ADMINS</h6><h1 class="fw-bold">@Model.Count(u => u.RoleName == "Admin")</h1></div></div>
+        <div class="col-md-3"><div class="stat-card" style="background-color: #2dbaff;"><h6>MANAGERS</h6><h1 class="fw-bold">@Model.Count(u => u.RoleName == "Manager")</h1></div></div>
+        <div class="col-md-3"><div class="stat-card" style="background-color: #4b5563;"><h6>MEMBERS</h6><h1 class="fw-bold">@Model.Count(u => u.RoleName == "Member")</h1></div></div>
+    </div>
+
+    <form method="get" asp-action="Index" class="card p-3 mb-4 border-0 shadow-sm" style="border-radius: 15px;">
+        <div class="row g-3 align-items-center">
+            <div class="col-md-8">
+                <div class="input-group">
+                    <span class="input-group-text bg-transparent border-end-0"><i class="bi bi-search text-muted"></i></span>
+                    <input type="text" name="searchEmail" class="form-control border-start-0" placeholder="Search by email address...">
+                </div>
+            </div>
+            <div class="col-md-3">
+                <select name="roleFilter" class="form-select" style="border-radius: 10px;">
+                    <option value="All">All Roles</option>
+                    <option value="Admin">Administrator</option>
+                    <option value="Manager">Manager</option>
+                    <option value="Member">Team Member</option>
+                </select>
+            </div>
+            <div class="col-md-1"><button type="submit" class="btn btn-dark w-100 py-2" style="border-radius: 10px;">Go</button></div>
+        </div>
+    </form>
+
+    <div class="table-container">
+        <table class="table mb-0">
+            <thead>
+                <tr><th class="ps-4">User</th><th>Role</th><th>Status</th><th class="text-end pe-4">Actions</th></tr>
+            </thead>
+            <tbody>
+                @foreach (var user in Model) {
+                    <tr>
+                        <td class="ps-4">
+                            <div class="d-flex align-items-center">
+                                <div class="avatar bg-primary me-3">@user.FullName[0].ToString().ToUpper()</div>
+                                <div><h6 class="mb-0 fw-bold">@user.FullName</h6><small class="text-muted">@user.Email</small></div>
+                            </div>
+                        </td>
+                        <td><span class="role-badge">@user.RoleName</span></td>
+                        <td><span class="status-badge @(user.IsActive ? "" : "inactive")">@(user.IsActive ? "Active" : "Inactive")</span></td>
+                        <td class="text-end pe-4">
+                            <div class="d-flex justify-content-end gap-3 align-items-center text-muted">
+                                <i class="bi bi-eye fs-5 cursor-pointer" title="View Details" onclick="openDetails(@user.UserId)"></i>
+                                <i class="bi bi-pencil-square fs-5 cursor-pointer" onclick="openEdit(@user.UserId)"></i>
+                                <form asp-action="DeleteUser" method="post" onsubmit="return confirm('Deactivate this user?');" class="m-0">
+                                    <input type="hidden" name="id" value="@user.UserId" /><button type="submit" class="btn btn-link p-0 text-danger border-0"><i class="bi bi-trash fs-5"></i></button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<div class="modal fade" id="userModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0 p-4 pb-0"><h5 class="fw-bold" id="modalTitle">User Details</h5><button type="button" class="btn-close" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body p-4">
+                <form id="userForm" asp-action="SaveUser" method="post" class="needs-validation" novalidate>
+                    <input type="hidden" id="UserId" name="UserId" value="0">
+                    <input type="hidden" name="Password" value="123456">
+
+                    <div class="mb-3">
+                        <label class="small fw-bold mb-1">Full Name *</label>
+                        <input type="text" id="FullName" name="FullName" class="form-control px-3 py-2" placeholder="Enter full name" required>
+                        <div class="invalid-feedback">Full name is required.</div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="small fw-bold mb-1">Email Address *</label>
+                        <input type="email" id="Email" name="Email" class="form-control px-3 py-2" placeholder="email@example.com" required>
+                        <div class="invalid-feedback">A valid email is required.</div>
+                    </div>
+
+                    <label class="small fw-bold mb-2">User Role *</label>
+                    <div class="role-box" id="boxAdmin" onclick="selectRole('Admin')">
+                        <input type="radio" name="RoleName" value="Admin" id="roleAdmin">
+                        <div class="role-content">
+                            <div class="fw-bold small"><i class="bi bi-shield-lock me-2 text-primary"></i>Administrator</div>
+                            <small class="text-muted" style="font-size:10px">Full system access and security settings</small>
+                        </div>
+                    </div>
+                    <div class="role-box" id="boxManager" onclick="selectRole('Manager')">
+                        <input type="radio" name="RoleName" value="Manager" id="roleManager">
+                        <div class="role-content">
+                            <div class="fw-bold small"><i class="bi bi-person-workspace me-2 text-info"></i>Manager</div>
+                            <small class="text-muted" style="font-size:10px">Project management and team assignment</small>
+                        </div>
+                    </div>
+                    <div class="role-box active" id="boxMember" onclick="selectRole('Member')">
+                        <input type="radio" name="RoleName" value="Member" id="roleMember" checked>
+                        <div class="role-content">
+                            <div class="fw-bold small text-primary"><i class="bi bi-people me-2"></i>Team Member</div>
+                            <small class="text-muted" style="font-size:10px">Standard access to view and update tasks</small>
+                        </div>
+                    </div>
+
+                    <div class="form-check form-switch mt-3">
+                        <input class="form-check-input" type="checkbox" id="IsActive" name="IsActive" value="true" checked>
+                        <label class="form-check-label small fw-bold">Active Status</label>
+                    </div>
+                    <button type="submit" class="btn btn-primary w-100 py-3 fw-bold mt-4" style="background:#6366f1; border:none; border-radius:12px;">Save Changes</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="detailsModal" tabindex="-1">
+    <div class="modal-dialog modal-dialog-centered modal-lg">
+        <div class="modal-content">
+            <div class="details-header d-flex justify-content-between align-items-center"><h5 class="fw-bold mb-0">Profile Summary</h5><button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button></div>
+            <div class="modal-body p-4">
+                <div class="d-flex align-items-center mb-4">
+                    <div class="icon-box me-3 fw-bold" id="detAvatar">U</div>
+                    <div><h4 class="fw-bold mb-0" id="detName">Name</h4><div class="text-muted small" id="detEmail">Email</div><span class="role-badge mt-2 d-inline-block" id="detRole">Role</span></div>
+                </div>
+                <div class="row g-3 mb-4 text-center">
+                    <div class="col-md-3"><div class="detail-card" style="background: #f0f7ff;"><h5 class="fw-bold text-primary mb-0" id="detProjCount">0</h5><small>Projects</small></div></div>
+                    <div class="col-md-3"><div class="detail-card" style="background: #f0fdf4;"><h5 class="fw-bold text-success mb-0" id="detCompleted">0</h5><small>Done</small></div></div>
+                    <div class="col-md-3"><div class="detail-card" style="background: #fffaf0;"><h5 class="fw-bold text-warning mb-0" id="detInProgress">0</h5><small>Progress</small></div></div>
+                    <div class="col-md-3"><div class="detail-card" style="background: #fdf2f8;"><h5 class="fw-bold text-danger mb-0" id="detPending">0</h5><small>Pending</small></div></div>
+                </div>
+                <h6 class="fw-bold mb-3">Recent Tasks</h6>
+                <div id="detTaskList"></div>
+                <div class="mt-4 text-end">
+                    <button class="btn btn-primary px-4" style="background:#6366f1; border:none; border-radius:8px;" onclick="closeDetailsAndEdit()">Edit Profile</button>
+                    <button class="btn btn-light px-4" data-bs-dismiss="modal" style="border-radius:8px;">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        const myModal = new bootstrap.Modal(document.getElementById('userModal'));
+        const detailsModal = new bootstrap.Modal(document.getElementById('detailsModal'));
+        let currentUserId = 0;
+
+        (function () {
+            'use strict';
+            document.querySelectorAll('.needs-validation').forEach(form => {
+                form.addEventListener('submit', event => {
+                    if (!form.checkValidity()) { event.preventDefault(); event.stopPropagation(); }
+                    form.classList.add('was-validated');
+                }, false);
+            });
+        })();
+
+        function selectRole(role) {
+            $('.role-box').removeClass('active'); $('#box' + role).addClass('active');
+            $(`input[name="RoleName"][value="${role}"]`).prop('checked', true);
+        }
+
+        function openAdd() { 
+            const form = document.getElementById('userForm');
+            form.reset(); form.classList.remove('was-validated');
+            $('#UserId').val(0); $('#modalTitle').text('Add New User'); 
+            selectRole('Member'); myModal.show(); 
+        }
+
+        function openEdit(id) {
+            $.get('/User/GetUser/' + id, function(res) {
+                if(!res.hasError) {
+                    const u = res.data;
+                    document.getElementById('userForm').classList.remove('was-validated');
+                    $('#UserId').val(u.userId); $('#FullName').val(u.fullName);
+                    $('#Email').val(u.email); $('#IsActive').prop('checked', u.isActive);
+                    $('#modalTitle').text('Edit User'); selectRole(u.roleName); myModal.show();
+                }
+            });
+        }
+
+        function openDetails(id) {
+            currentUserId = id;
+            $.get('/User/GetUserDetails/' + id, function(res) {
+                if(!res.hasError) {
+                    const d = res.data;
+                    $('#detName').text(d.fullName); $('#detEmail').text(d.email);
+                    $('#detAvatar').text(d.fullName[0].toUpperCase()); $('#detRole').text(d.roleName);
+                    $('#detProjCount').text(d.activeProjectsCount); $('#detCompleted').text(d.completedTasksCount);
+                    $('#detInProgress').text(d.inProgressTasksCount); $('#detPending').text(d.pendingTasksCount);
+                    
+                    let html = d.recentTasks.length > 0 ? d.recentTasks.map(t => `
+                        <div class="project-item d-flex justify-content-between align-items-center">
+                            <div><b>${t.title}</b><br><small class="text-muted">${t.status}</small></div>
+                            <span class="role-badge" style="background:#f1f5f9; color:#64748b; font-size:10px;">${t.priority}</span>
+                        </div>`).join('') : "<p class='text-muted small text-center'>No tasks assigned.</p>";
+                    $('#detTaskList').html(html);
+                    detailsModal.show();
+                }
+            });
+        }
+
+        function closeDetailsAndEdit() { detailsModal.hide(); setTimeout(() => openEdit(currentUserId), 300); }
+    </script>
+}

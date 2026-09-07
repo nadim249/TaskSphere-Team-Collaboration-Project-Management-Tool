@@ -1,0 +1,74 @@
+﻿@model IEnumerable<TaskSphere.Entities.User>
+
+<div class="container-fluid mt-4">
+    <div class="mb-4">
+        <h2 class="fw-bold"><i class="bi bi-people-fill text-primary"></i> My Team</h2>
+        <p class="text-muted">Viewing internal active members collaborating inside TaskSphere platform workspace environments.</p>
+    </div>
+
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-0">
+            <table class="table table-hover align-middle mb-0">
+                <thead class="table-light">
+                    <tr>
+                        <th class="ps-4">COLLEAGUE IDENTITY</th>
+                        <th>PLATFORM ACCESS DESIGNATION</th>
+                        <th>CURRENT CONNECTIVITY STATUS</th>
+                        <th class="text-end pe-4">ACTIONS CALLBACK</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var user in Model)
+                    {
+                        <tr>
+                            <td class="ps-4">
+                                <div class="d-flex align-items-center">
+                                    <div class="avatar bg-primary text-white rounded-circle d-flex align-items-center justify-content-center me-3" style="width: 40px; height: 40px;">
+                                        @user.FullName.Substring(0, 1).ToUpper()
+                                    </div>
+                                    <div>
+                                        <div class="fw-bold">@user.FullName</div>
+                                        <div class="text-muted small">@user.Email</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td>
+                                <span class="badge bg-light text-dark border">@user.RoleName</span>
+                            </td>
+                            <td>
+                                <span class="text-success small"><i class="bi bi-circle-fill" style="font-size: 0.6rem;"></i> Active Workspace</span>
+                            </td>
+  <td class="text-end pe-4">
+    <div class="dropdown d-inline-block">
+        <button class="btn btn-outline-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            <i class="bi bi-envelope me-1"></i> Contact Direct
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end shadow-sm border">
+            <li>
+                <a class="dropdown-item" href="https://mail.google.com/mail/?view=cm&fs=1&to=@user.Email&su=TaskSphere%20Collaboration" target="_blank">
+                    <i class="bi bi-google text-danger me-2"></i> Open in Gmail
+                </a>
+            </li>
+            <li>
+                <a class="dropdown-item" href="https://outlook.office.com/mail/deeplink/compose?to=@user.Email&subject=TaskSphere%20Collaboration" target="_blank">
+                    <i class="bi bi-microsoft text-primary me-2"></i> Open in Outlook Web
+                </a>
+            </li>
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <a class="dropdown-item" href="mailto:@user.Email?subject=TaskSphere%20Collaboration">
+                    <i class="bi bi-laptop me-2"></i> System Default App
+                </a>
+            </li>
+        </ul>
+    </div>
+</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">

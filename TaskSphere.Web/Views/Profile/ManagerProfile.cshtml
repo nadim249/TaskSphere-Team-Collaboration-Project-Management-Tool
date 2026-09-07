@@ -1,0 +1,60 @@
+﻿@model TaskSphere.Models.ProfileUpdateVM
+@{
+    ViewData["Title"] = "Manager Password Update";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success border-0 shadow-sm mb-4" style="border-radius: 12px;"><i class="bi bi-check-circle-fill me-2"></i> @TempData["SuccessMessage"]</div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger border-0 shadow-sm mb-4" style="border-radius: 12px;"><i class="bi bi-exclamation-triangle-fill me-2"></i> @TempData["ErrorMessage"]</div>
+            }
+
+            <div class="card border-0 shadow-sm p-4" style="border-radius: 24px;">
+                <div class="d-flex align-items-center mb-4 p-3" style="background: #e0f2fe; border-radius: 16px;">
+                    <div class="avatar text-white me-3 fw-bold fs-4 d-flex align-items-center justify-content-center" style="width:60px; height:60px; border-radius:50%; background-color:#0284c7;">
+                        @Model.FullName[0].ToString().ToUpper()
+                    </div>
+                    <div>
+                        <h4 class="fw-bold mb-0 text-dark">@Model.FullName</h4>
+                        <span class="badge mt-1" style="background:#0284c7; padding: 5px 12px; border-radius: 20px;">@Model.RoleName Profile</span>
+                    </div>
+                </div>
+
+                <form asp-action="UpdateProfile" method="post" class="needs-validation" novalidate>
+                    <input type="hidden" asp-for="UserId" />
+
+                    <div class="mb-3">
+                        <label class="small fw-bold text-muted mb-1">User Email Address</label>
+                        <input type="text" class="form-control bg-light px-3 py-2" value="@Model.Email" readonly style="border-radius:10px; border: 1.5px solid #eef2f6;" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="small fw-bold mb-1">Full Name</label>
+                        <input type="text" asp-for="FullName" class="form-control px-3 py-2" style="border-radius:10px;" required />
+                        <div class="invalid-feedback">Full Name field cannot be blank.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="small fw-bold mb-1">Current Password</label>
+                        <input type="password" asp-for="OldPassword" class="form-control px-3 py-2" placeholder="Enter current password" style="border-radius:10px;" required />
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="small fw-bold mb-1">New Password</label>
+                        <input type="password" asp-for="NewPassword" class="form-control px-3 py-2" placeholder="Enter new password" style="border-radius:10px;" required />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-3 fw-bold" style="background:#0284c7; border:none; border-radius:12px;">
+                        <i class="bi bi-save-fill me-2"></i>Update
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

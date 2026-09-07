@@ -1,0 +1,97 @@
+﻿@model TaskSphere.Models.ProfileUpdateVM
+@{
+    ViewData["Title"] = "Member Password Update";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            @if (TempData["SuccessMessage"] != null)
+            {
+                <div class="alert alert-success border-0 shadow-sm mb-4" style="border-radius: 12px;"><i class="bi bi-check-circle-fill me-2"></i> @TempData["SuccessMessage"]</div>
+            }
+            @if (TempData["ErrorMessage"] != null)
+            {
+                <div class="alert alert-danger border-0 shadow-sm mb-4" style="border-radius: 12px;"><i class="bi bi-exclamation-triangle-fill me-2"></i> @TempData["ErrorMessage"]</div>
+            }
+
+            <div class="card border-0 shadow-sm p-4 mb-4" style="border-radius: 24px;">
+                <div class="d-flex align-items-center mb-4 p-3" style="background: #e0e7ff; border-radius: 16px;">
+                    <div class="avatar text-white me-3 fw-bold fs-4 d-flex align-items-center justify-content-center" style="width:60px; height:60px; border-radius:50%; background-color:#6366f1;">
+                        @Model.FullName[0].ToString().ToUpper()
+                    </div>
+                    <div>
+                        <h4 class="fw-bold mb-0 text-dark">@Model.FullName</h4>
+                        <span class="badge mt-1" style="background:#6366f1; padding: 5px 12px; border-radius: 20px;">@Model.RoleName Profile</span>
+                    </div>
+                </div>
+
+                <form asp-action="UpdateProfile" method="post" class="needs-validation" novalidate>
+                    <input type="hidden" asp-for="UserId" />
+
+                    <div class="mb-3">
+                        <label class="small fw-bold text-muted mb-1">User Email Address</label>
+                        <input type="text" class="form-control bg-light px-3 py-2" value="@Model.Email" readonly style="border-radius:10px; border: 1.5px solid #eef2f6;" />
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="small fw-bold mb-1">Full Name</label>
+                        <input type="text" asp-for="FullName" class="form-control px-3 py-2" style="border-radius:10px;" required />
+                        <div class="invalid-feedback">Full Name field cannot be blank.</div>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="small fw-bold mb-1">Current Password </label>
+                        <input type="password" asp-for="OldPassword" class="form-control px-3 py-2" placeholder="Enter current password" style="border-radius:10px;" required />
+                    </div>
+
+                    <div class="mb-4">
+                        <label class="small fw-bold mb-1">New Password </label>
+                        <input type="password" asp-for="NewPassword" class="form-control px-3 py-2" placeholder="Enter new password" style="border-radius:10px;" required />
+                    </div>
+
+                    <button type="submit" class="btn btn-primary w-100 py-3 fw-bold" style="background:#6366f1; border:none; border-radius:12px;">
+                        <i class="bi bi-person-check-fill me-2"></i>Update
+                    </button>
+                </form>
+            </div>
+
+            <div class="card border-0 shadow-sm p-4" style="border-radius: 24px;">
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <h5 class="fw-bold mb-0">Assigned Tasks</h5>
+                    <span class="badge rounded-pill bg-primary-subtle text-primary border border-primary-subtle">@Model.Tasks.Count</span>
+                </div>
+
+                @if (Model.Tasks.Any())
+                {
+                    <div class="list-group list-group-flush">
+                        @foreach (var task in Model.Tasks)
+                        {
+                            <a asp-controller="TMemberTask" asp-action="Details" asp-route-id="@task.TaskId" class="list-group-item list-group-item-action px-0 py-3 border-0 border-bottom">
+                                <div class="d-flex justify-content-between align-items-start gap-3">
+                                    <div>
+                                        <div class="fw-bold text-dark">@task.Title</div>
+                                        <div class="text-muted small text-truncate-2">@task.Description</div>
+                                        <div class="small text-muted mt-2">
+                                            <span class="me-3"><strong>Project:</strong> @task.Project?.Title</span>
+                                            <span class="me-3"><strong>Status:</strong> @task.Status</span>
+                                            <span><strong>Priority:</strong> @task.Priority</span>
+                                        </div>
+                                    </div>
+                                    <div class="text-end small text-muted text-nowrap">
+                                        <div>@task.DueDate.ToString("MMM dd, yyyy")</div>
+                                        <i class="bi bi-chevron-right"></i>
+                                    </div>
+                                </div>
+                            </a>
+                        }
+                    </div>
+                }
+                else
+                {
+                    <div class="alert alert-light border mb-0">No tasks are assigned to this member yet.</div>
+                }
+            </div>
+        </div>
+    </div>
+</div>
