@@ -1,35 +1,35 @@
-# 🚀 TaskSphere
+# TaskSphere
 
-### Team Collaboration & Project Management Tool
+**Team Collaboration & Project Management Tool**
 
-TaskSphere is a web-based project management platform built with **ASP.NET Core MVC** that helps teams manage projects, assign tasks, track progress, and collaborate efficiently.
+TaskSphere is a web-based project management platform built with ASP.NET Core MVC. It helps teams manage projects, assign tasks, track progress, and collaborate in one place.
 
-## ✨ Features
+## Features
 
-* 🔐 **Authentication & Role Management** — Admin, Project Manager, Team Member
-* 📁 **Project Management** — Projects, members, deadlines & priorities
-* ✅ **Task Management** — Task assignment, status, priority, search & filter
-* 💬 **Team Collaboration** — Comments & file attachments
-* 📊 **Dashboard & Analytics** — Task statistics, performers & deadlines
-* 🔌 **User API** — User CRUD operations
+- **Authentication & Role Management** — Admin, Project Manager, and Team Member roles
+- **Project Management** — Create projects, manage members, set deadlines and priorities
+- **Task Management** — Assign tasks, track status and priority, search and filter
+- **Team Collaboration** — Comments and file attachments on tasks
+- **Dashboard & Analytics** — Task statistics, top performers, and upcoming deadlines
+- **User API** — CRUD operations for user management
 
-## 🛠️ Tech Stack
+## Tech Stack
 
-**ASP.NET Core MVC · C# · SQL Server · Entity Framework Core · HTML · CSS · JavaScript · Bootstrap · Web API**
+ASP.NET Core MVC, C#, SQL Server, Entity Framework Core, HTML, CSS, JavaScript, Bootstrap, Web API
 
-## 👥 Team
+## Team
 
-| Member                    | Contribution                                                    |
-| ------------------------- |---------------------------------------------------------------- |
-| **Khalid Mahmud Nadim**   | Authentication, Task Management, Team Member Task Management    |
-| **Md Rakibul Islam Ayon** | Dashboard, Project Management, Team Member Dashboard & Projects |
-| **Arnab Hasan Kabbo**     | User Management, Profile Management, &Team Management |
+| Member | Contribution |
+|---|---|
+| Khalid Mahmud Nadim | Authentication, Task Management, Team Member Task Management |
+| Md Rakibul Islam Ayon | Dashboard, Project Management, Team Member Dashboard & Projects |
+| Arnab Hasan Kabbo | User Management, Profile Management, Team Management |
 
-## 🎯 Task Workflow
+## Task Workflow
 
-`Pending → In Progress → Completed`
+Pending → In Progress → Completed
 
-## ⚙️ Run Locally
+## Running Locally
 
 ```bash
 git clone <repository-url>
@@ -39,10 +39,10 @@ dotnet ef database update
 dotnet run
 ```
 
-Configure the SQL Server connection string in `appsettings.json`.
+Make sure to configure the SQL Server connection string in `appsettings.json` before running.
 
 ---
 
-**Advance Programming with .NET** | **Spring 2025–2026** | **Section D** | **Group 03**
+Advance Programming with .NET · Spring 2025–2026 · Section D · Group 03
 
-> **TaskSphere — Manage Projects. Track Tasks. Collaborate Better.**
+*TaskSphere — Manage projects. Track tasks. Collaborate better.*
